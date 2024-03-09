@@ -4,6 +4,23 @@ import React, { createContext, useReducer } from 'react';
 export const AppReducer = (state, action) => {
     let budget = 0;
     switch (action.type) {
+
+        case 'DECREASE_EXPENSE':
+            const updatedExpenses = state.expenses.map((expense) => {
+              if (expense.name === action.payload.name) {
+                return {
+                  ...expense,
+                  cost: expense.cost - action.payload.cost
+                };
+              }
+              return expense;
+            });
+            return {
+              ...state,
+              expenses: updatedExpenses
+            }
+
+
         case 'ADD_EXPENSE':
             let total_budget = 0;
             total_budget = state.expenses.reduce(
@@ -30,6 +47,9 @@ export const AppReducer = (state, action) => {
                     ...state
                 }
             }
+
+            
+            
             case 'RED_EXPENSE':
                 const red_expenses = state.expenses.map((currentExp)=> {
                     if (currentExp.name === action.payload.name && currentExp.cost - action.payload.cost >= 0) {
@@ -112,6 +132,7 @@ export const AppProvider = (props) => {
                 expenses: state.expenses,
                 budget: state.budget,
                 remaining: remaining,
+                
                 dispatch,
                 currency: state.currency
             }}
